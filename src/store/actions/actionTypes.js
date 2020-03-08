@@ -1,1 +1,1 @@
-export const INSERT = 'INSERT';
+export const LOGIN = 'LOGIN';

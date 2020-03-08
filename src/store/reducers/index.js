@@ -1,3 +1,3 @@
-import reducer from './reducer';
+import user from './user';
 
-export { reducer };
+export { user };

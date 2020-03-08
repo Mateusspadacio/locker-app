@@ -1,13 +1,14 @@
-import { createStore, combineReducers } from 'redux';
-import { reducer } from './reducers';
+import { createStore, combineReducers, applyMiddleware  } from 'redux';
+import thunk from 'redux-thunk';
+import { user } from './reducers';
 
 // key value par reducers
 const rootReducer = combineReducers({
-    reducer
+    user
 });
 
 const configureStore = () => {
-    return createStore(rootReducer);
+    return createStore(rootReducer, applyMiddleware(thunk));
 };
 
 export default configureStore;
