@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { Provider } from 'react-redux';
 import configureStore from './src/store/configureStore';
-import Routes from './routes';
+import Routes from './src/routes/Routes';
 
 const store = configureStore();
 
