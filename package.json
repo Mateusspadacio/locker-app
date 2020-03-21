@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "test": "detox test -c android.emu.debug",
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
