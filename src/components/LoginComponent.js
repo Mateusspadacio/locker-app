@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 
 import { login } from '../store/actions/login';
@@ -11,12 +11,12 @@ class LoginComponent extends Component {
         await login();
         console.log(this.props)
     }
-
+    // <Button testID="home_button" title="Home" onPress={() => this.props.navigation.navigate('Home')} /> 
     render() {
         return (
             <View>
                 <Text>Login Component</Text>
-                <Button title="Home" onPress={() => this.props.navigation.navigate('Home')} />
+                <TextInput testID="user_input"/>
                 <Button title="Logar" onPress={() => this.onLogin()} />
             </View>
         )
