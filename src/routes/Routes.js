@@ -14,7 +14,7 @@ function Routes() {
                 <Stack.Screen
                     name="Login"
                     component={LoginComponent}
-                    options={{ title: 'Login' }}
+                    options={{ headerShown: false }}
                 />
                 <Stack.Screen
                     name="Home"
