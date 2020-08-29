@@ -1,12 +1,19 @@
-import { LOGIN } from '../actions/actionTypes';
+import { LOGIN, LOGIN_ERROR, SIGNUP } from '../actions/actionTypes';
 
 const initialState = {
-    // some initial data
+    email: '',
+    password: '',
+    cpf: '',
+    born: ''
 }
 
 const user = (state = initialState, action) => {
     switch(action.type) {
         case LOGIN:
+            return action.payload;
+        case LOGIN_ERROR:
+            return { errors: { ...action.payload } }
+        case SIGNUP:
             return action.payload;
         default:
             return state;
