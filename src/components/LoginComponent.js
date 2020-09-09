@@ -34,8 +34,9 @@ class LoginComponent extends Component {
   errorMessage(field) {
     const { errors } = this.props.user;
     if (!errors) return null;
-
-    return <Text style={{ marginBottom: 10, marginLeft: 10 }}>{errors[field]}</Text>;
+    if (!errors.login) return null;
+    
+    return <Text style={{ marginBottom: 10, marginLeft: 10, color: 'red' }}>{errors.login[field]}</Text>;
   }
 
   async onLogin() {
@@ -43,8 +44,8 @@ class LoginComponent extends Component {
     const { email, password } = this.state;
 
     await login({ email, password });
-    console.log('propso', this.props.user)
-    if (!this.props.user.errors) this.props.navigation.navigate('Home');
+
+    if (this.props.user.login && !this.props.user.login.errors) this.props.navigation.navigate('Home');
   }
 
   render() {
@@ -68,11 +69,12 @@ class LoginComponent extends Component {
           secureTextEntry 
           onChangeText={(password) => this.setState({ password })} />
         {this.errorMessage('password')}
-        <Text onPress={() => {console.log('aqui')}} style={{ alignSelf: 'flex-end' }}> Esqueci minha senha </Text>
+        {this.errorMessage('message')}
+        <Text onPress={() => {  }} style={{ alignSelf: 'flex-end' }}> Esqueci minha senha </Text>
         <View style={{  marginTop: 15 }}>
           <Button buttonStyle={styles.button} title="Entrar" onPress={() => this.onLogin()} />
           <Text h4 style={{ alignSelf: 'center' }}>OU</Text>
-          <Button buttonStyle={styles.button} title="Cadastre-se" onPress={() => this.onLogin()} />
+          <Button buttonStyle={styles.button} title="Cadastre-se" onPress={() => this.props.navigation.navigate('Signup')} />
         </View>
       </View>
     )

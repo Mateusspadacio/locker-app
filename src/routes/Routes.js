@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeComponent from '../components/HomeComponent';
 import LoginComponent from '../components/LoginComponent';
+import SignupComponent from '../components/SignupComponent';
 
 const Stack = createStackNavigator();
 
@@ -19,7 +20,12 @@ function Routes() {
                 <Stack.Screen
                     name="Home"
                     component={HomeComponent}
-                    options={{ title: 'Welcome' }}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="Signup"
+                    component={SignupComponent}
+                    options={{ title: 'Cadastro' }}
                 />
             </Stack.Navigator>
         </NavigationContainer>

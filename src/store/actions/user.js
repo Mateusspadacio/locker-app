@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import env from '../../env';
-import { LOGIN, LOGIN_ERROR, SIGNUP } from './actionTypes';
+import { LOGIN, LOGIN_ERROR, SIGNUP, SIGNUP_ERROR } from './actionTypes';
 import UserValidator from '../../validators/UserValidator';
 
 export const login = (user = { email, password }) => {
@@ -31,12 +31,31 @@ export const login = (user = { email, password }) => {
     }
 }
 
-export const signup = (user = { email, password, cpf, born }) => {
-    return async dispatch => {
-        const data = await axios.post(`${env.apiUrl}/users/signup`, user);
+export const signup = (user = { name, email, password, repassword, cpf, born }) => {
+    const validator = UserValidator.signup(user);
+    if (!validator.isValid) {
+        return {
+            type: SIGNUP_ERROR,
+            payload: { ...validator.errors }
+        }
+    }
+
+    delete user.repassword;
+
+    try {
+        return async dispatch => {
+            const data = await axios.post(`${env.apiUrl}/users/signup`, user);
+            console.log(data)
+            return dispatch({
+                type: SIGNUP,
+                payload: data
+            });
+        }
+    } catch(err) {
+        const { data } = err.response;
         return dispatch({
-            type: SIGNUP,
-            payload: data
+            type: LOGIN_ERROR,
+            payload: { message: data.message }
         });
     }
 }
