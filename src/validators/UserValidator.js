@@ -30,15 +30,16 @@ export default class UserValidator {
         if (!this.isValidPassword(user.password)) {
             errors.password = 'A senha deve ter entre 6 a 15 caracteres';
         }
-        else if (user.password !== user.repassword) {
-            errors.repassword = 'As senhas não condizem';
-        }
 
         return new Validator(errors);
     }
 
-    static signup(user = { name, email, password, cpf, born }) {
+    static signup(user = { name, email, password, repassword, cpf, born }) {
         const errors = this.login(user).errors;
+
+        if (user.password !== user.repassword) {
+            errors.repassword = 'As senhas não condizem';
+        }
 
         if (!user.name || !user.name.length) {
             errors.name = 'Nome inválido';

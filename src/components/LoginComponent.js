@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { Input, Button, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
 
 import { login } from '../store/actions/user';
+import PopupComponent from './PopupComponent';
+import OAuth from '../model/OAuth';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,6 +23,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: '20%',
     marginBottom: '15%'
+  },
+  error: {
+    fontSize: 15,
+    marginBottom: 10
   }
 });
 
@@ -28,15 +34,25 @@ class LoginComponent extends Component {
 
   state = {
     email: '',
-    password: ''
+    password: '',
+    isVisible: false
   }
 
   errorMessage(field) {
     const { errors } = this.props.user;
     if (!errors) return null;
     if (!errors.login) return null;
-    
-    return <Text style={{ marginBottom: 10, marginLeft: 10, color: 'red' }}>{errors.login[field]}</Text>;
+
+    return errors.login[field];
+  }
+
+  popupErroMessage() {
+    return (<PopupComponent
+      message={this.errorMessage('message')}
+      isVisible={this.state.isVisible}
+      onBackdropPress={() => this.setState({ isVisible: false })}
+      onPress={() => this.setState({ isVisible: false })}
+    />);
   }
 
   async onLogin() {
@@ -44,39 +60,51 @@ class LoginComponent extends Component {
     const { email, password } = this.state;
 
     await login({ email, password });
+    const { user } = this.props;
 
-    if (this.props.user.login && !this.props.user.login.errors) this.props.navigation.navigate('Home');
+    if (user && !user.errors) {
+      OAuth.token = user.token;
+      this.props.navigation.navigate('Home');
+      return;
+    }
+
+    const { errors } = user;
+    if (errors && errors.login && errors.login.message) {
+      this.setState({ isVisible: true });
+    }
   }
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.title}>
           <Text h2>LockHere</Text>
           <Text>Busque seu armário inteligente aqui</Text>
         </View>
-        <Input 
-          testID="email_input" 
-          placeholder='email@exemplo.com' 
-          label="Email" 
+        <Input
+          testID="email_input"
+          placeholder='email@exemplo.com'
+          label="Email"
+          errorMessage={this.errorMessage('email')}
+          errorStyle={styles.error}
           labelStyle={styles.label}
           onChangeText={(email) => this.setState({ email })} />
-        {this.errorMessage('email')}
-        <Input 
-          testID="password_input" 
-          placeholder="******" label="Senha" 
-          labelStyle={styles.label} 
-          secureTextEntry 
+        <Input
+          testID="password_input"
+          placeholder="******" label="Senha"
+          errorMessage={this.errorMessage('password')}
+          errorStyle={styles.error}
+          labelStyle={styles.label}
+          secureTextEntry
           onChangeText={(password) => this.setState({ password })} />
-        {this.errorMessage('password')}
-        {this.errorMessage('message')}
-        <Text onPress={() => {  }} style={{ alignSelf: 'flex-end' }}> Esqueci minha senha </Text>
-        <View style={{  marginTop: 15 }}>
+        {this.popupErroMessage()}
+        <Text onPress={() => { }} style={{ alignSelf: 'flex-end' }}>Esqueci minha senha</Text>
+        <View style={{ marginTop: 15 }}>
           <Button buttonStyle={styles.button} title="Entrar" onPress={() => this.onLogin()} />
           <Text h4 style={{ alignSelf: 'center' }}>OU</Text>
           <Button buttonStyle={styles.button} title="Cadastre-se" onPress={() => this.props.navigation.navigate('Signup')} />
         </View>
-      </View>
+      </ScrollView>
     )
   }
 }

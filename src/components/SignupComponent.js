@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Input, Button, Text } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 
 import { signup } from '../store/actions/user';
+import PopupComponent from './PopupComponent';
+import OAuth from '../model/OAuth';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,13 +20,20 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'black',
-    borderRadius: 10
+    borderRadius: 10,
+    marginBottom: 50
+  },
+  error: {
+    fontSize: 15,
+    marginBottom: 10
   }
 });
 
 class SignupComponent extends Component {
 
-  state = {};
+  state = {
+    isVisible: false
+  };
 
   async onSubmit() {
     const { signup } = this.props;
@@ -32,8 +41,18 @@ class SignupComponent extends Component {
 
     await signup({  name, email, password, repassword, cpf, born  });
 
-    console.log(this.props.user)
-    if (this.props.user && !this.props.user.signup.errors) this.props.navigation.navigate('Home');
+    const { user } = this.props;
+
+    if (user && !user.errors) {
+      OAuth.token = user.token; 
+      this.props.navigation.navigate('Home'); 
+      return; 
+    }
+
+    const { errors } = user;
+    if (errors && errors.signup && errors.signup.message) {
+      this.setState({ isVisible: true });
+    }
   }
 
   errorMessage(field) {
@@ -41,7 +60,16 @@ class SignupComponent extends Component {
     if (!errors) return null;
     if (!errors.signup) return null;
 
-    return <Text style={{ marginBottom: 10, marginLeft: 10, color: 'red' }}>{errors.signup[field]}</Text>;
+    return errors.signup[field];
+  }
+
+  popupErroMessage() {
+    return (<PopupComponent
+      message={this.errorMessage('message')}
+      isVisible={this.state.isVisible}
+      onBackdropPress={() => this.setState({ isVisible: false })}
+      onPress={() => this.setState({ isVisible: false })}
+    />);
   }
 
   datePicker() {
@@ -73,53 +101,65 @@ class SignupComponent extends Component {
       <ScrollView style={styles.container}>
         <Input
           testID="nome_input"
+          errorMessage={this.errorMessage('name')}
+          errorStyle={styles.error}
           placeholder='Insira seu nome'
           label="Nome"
           labelStyle={styles.label}
           onChangeText={(name) => this.setState({ name })} />
-        {this.errorMessage('name')}
         <Input
           testID="email_input"
+          errorMessage={this.errorMessage('email')}
+          errorStyle={styles.error}
           placeholder='email@exemplo.com'
           label="Email"
           labelStyle={styles.label}
           onChangeText={(email) => this.setState({ email })} />
-        {this.errorMessage('email')}
         <Input
           testID="cpf_input"
+          errorMessage={this.errorMessage('cpf')}
+          errorStyle={styles.error}
           placeholder='Insira seu cpf'
           label="Cpf"
+          maxLength={11}
+          keyboardType='numeric'
           labelStyle={styles.label}
           onChangeText={(cpf) => this.setState({ cpf })} />
-        {this.errorMessage('cpf')}
         <Input
           testID="data_input"
+          errorMessage={this.errorMessage('born')}
+          errorStyle={styles.error}
           label="Data de nascimento"
           labelStyle={styles.label}
           InputComponent={this.datePicker.bind(this)} />
-        {this.errorMessage('born')}
         <Input
           testID="senha_input"
+          secureTextEntry
+          errorMessage={this.errorMessage('password')}
+          errorStyle={styles.error}
           placeholder='Insira a senha'
           label="Senha"
           labelStyle={styles.label}
+          maxLength={15}
           onChangeText={(password) => this.setState({ password })} />
-        {this.errorMessage('password')}
         <Input
           testID="confirma_senha_input"
+          secureTextEntry
+          errorMessage={this.errorMessage('repassword')}
+          errorStyle={styles.error}
           placeholder='Confirme sua senha'
           label="Confirmar senha"
           labelStyle={styles.label}
+          maxLength={15}
           onChangeText={(repassword) => this.setState({ repassword })} />
-        {this.errorMessage('repassword')}
         <Button buttonStyle={styles.button} title="Cadastrar" onPress={() => { this.onSubmit() }} />
+        {this.popupErroMessage()}
       </ScrollView>
     )
   }
 }
 
 const mapStateToProps = (props) => {
-  console.log('props', props)
   return props;
 }
 

@@ -15,19 +15,20 @@ export const login = (user = { email, password }) => {
 
     return async dispatch => {
         try {
-            const { data, status } = await axios.post(`${env.apiUrl}/users/login`, user)
+            const { data, status } = await axios.post(`${env.apiUrl}/users/login`, user);
+
             return dispatch({
                 type: LOGIN,
                 payload: { status, ...data }
             });
-        } catch(err) {
+        } catch (err) {
             const { data } = err.response;
             return dispatch({
                 type: LOGIN_ERROR,
                 payload: { message: data.message }
             });
         }
-        
+
     }
 }
 
@@ -40,22 +41,21 @@ export const signup = (user = { name, email, password, repassword, cpf, born }) 
         }
     }
 
-    delete user.repassword;
+    return async dispatch => {
+        try {
+            const { data } = await axios.post(`${env.apiUrl}/users/signup`, user);
 
-    try {
-        return async dispatch => {
-            const data = await axios.post(`${env.apiUrl}/users/signup`, user);
-            console.log(data)
             return dispatch({
                 type: SIGNUP,
                 payload: data
             });
+        } catch (err) {
+            const { data } = err.response;
+
+            return dispatch({
+                type: SIGNUP_ERROR,
+                payload: { message: data.message }
+            });
         }
-    } catch(err) {
-        const { data } = err.response;
-        return dispatch({
-            type: LOGIN_ERROR,
-            payload: { message: data.message }
-        });
     }
 }

@@ -1,10 +1,11 @@
 import { createStore, combineReducers, applyMiddleware  } from 'redux';
 import thunk from 'redux-thunk';
-import { user } from './reducers';
+import { user, map } from './reducers';
 
 // key value par reducers
 const rootReducer = combineReducers({
-    user
+    user,
+    map
 });
 
 const configureStore = () => {

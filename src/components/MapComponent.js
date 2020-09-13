@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-import MapView from 'react-native-maps';
 import { ActivityIndicator, View } from 'react-native';
+import { connect } from 'react-redux';
+import MapView from 'react-native-maps';
 
-export default class MapComponent extends Component {
+import { fetchNearbyLockers } from '../store/actions/map';
+
+const latitudeDelta = 0.0922;
+const longitudeDelta = 0.0421;
+
+class MapComponent extends Component {
 
   state = {
     mapLoaded: false
@@ -10,19 +16,35 @@ export default class MapComponent extends Component {
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-         const initialPosition = JSON.stringify(position);
-         console.log(initialPosition)
-         this.setState({ initialPosition });
+      async (position) => {
+        await this.props.fetchNearbyLockers(position.coords.longitude, position.coords.latitude);
+        this.setState({ position, mapLoaded: true });
       },
       (error) => alert(error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-   );
-    this.setState({ mapLoaded: true });
+    );
+  }
+
+  renderLockers() {
+    const { map } = this.props;
+    if (!map || !map.lockers) return null;
+
+    return map.lockers.map(({ _id, long, lat }) => (
+      <MapView.Marker
+        key={_id}
+        coordinate={{
+          latitude: lat,
+          longitude: long,
+          latitudeDelta,
+          longitudeDelta
+        }}
+      />
+    ));
   }
 
   render() {
-    if (!this.state.mapLoaded) {
+    const { position, mapLoaded } = this.state;
+    if (!mapLoaded) {
       return (
         <View style={{ flex: 1, justifyContent: 'center' }}>
           <ActivityIndicator size='large' />
@@ -33,23 +55,30 @@ export default class MapComponent extends Component {
     return (
       <MapView
         style={{ flex: 1 }}
+        onRegionChange={(r) => console.log(r)}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          latitudeDelta,
+          longitudeDelta,
         }}
       >
         <MapView.Marker
-            coordinate={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421}}
-            title='title'
-            description='sdfsdfs'
-         />
+          coordinate={{
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta,
+            longitudeDelta
+          }}
+        />
+        {this.renderLockers()}
       </MapView>
     );
   }
 }
+
+const mapStateToProps = (props) => {
+  return props;
+}
+
+export default connect(mapStateToProps, { fetchNearbyLockers })(MapComponent);

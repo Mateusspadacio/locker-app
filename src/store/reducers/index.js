@@ -1,3 +1,4 @@
 import user from './user';
+import map from './map';
 
-export { user };
+export { user, map };
