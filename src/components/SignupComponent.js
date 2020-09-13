@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import { Input, Button, Text } from 'react-native-elements';
+import { Input, Button } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 
@@ -96,7 +96,6 @@ class SignupComponent extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <ScrollView style={styles.container}>
         <Input

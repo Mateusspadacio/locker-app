@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import MapView from 'react-native-maps';
 
@@ -38,7 +39,9 @@ class MapComponent extends Component {
           latitudeDelta,
           longitudeDelta
         }}
-      />
+      >
+        <Icon size={30} name='lock'/>
+      </MapView.Marker>
     ));
   }
 
@@ -55,7 +58,7 @@ class MapComponent extends Component {
     return (
       <MapView
         style={{ flex: 1 }}
-        onRegionChange={(r) => console.log(r)}
+        onRegionChange={(r) => {}/*console.log(r)*/}
         initialRegion={{
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -70,7 +73,9 @@ class MapComponent extends Component {
             latitudeDelta,
             longitudeDelta
           }}
-        />
+        >
+          <Icon size={40} name='person-pin-circle'/>
+        </MapView.Marker>
         {this.renderLockers()}
       </MapView>
     );

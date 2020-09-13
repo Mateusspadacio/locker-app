@@ -1,36 +1,39 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
-import { ButtonGroup, Text } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+import MapComponent from './MapComponent';
+import ReserveComponent from './ReserveComponent';
+import ProfileComponent from './ProfileComponent';
 
 const styles = StyleSheet.create({
-    container: { 
-        marginLeft: 0, 
-        marginBottom: 0, 
-        height: 50, 
-        width: '100%' 
+    navigator: { 
+        backgroundColor: 'black', 
+        paddingTop: 5 
+    },
+    label: {
+        fontSize: 15, 
+        fontWeight: '200'
     }
-});
+  });
+
+const Tab = createBottomTabNavigator();
 
 export default class MenuComponent extends Component {
 
-    state = {
-        index: 1
-    }
-
-    constructor(props) {
-        super(props);
-        this.buttons = [{ element: () => <Text>Hello</Text> }, { element: () => <Text>World</Text> },
-        { element: () => <Text>ButtonGroup</Text> }];
-
+    icon({ focused, name }) {
+        const color = focused ? 'orange' : 'white';
+        return <Icon size={30} name={name} color={color}/>;
     }
 
     render() {
         return (
-            <ButtonGroup
-                onPress={(index) => { this.setState({ index }) }}
-                selectedIndex={this.state.index}
-                buttons={this.buttons}
-                containerStyle={styles.container} />
+            <Tab.Navigator tabBarOptions={{ style: styles.navigator, labelStyle: styles.label, activeTintColor: 'orange' }}>
+                <Tab.Screen options={{ tabBarIcon: ({ focused }) => this.icon({ focused, name: 'home' }) }} name="Home" component={MapComponent} />
+                <Tab.Screen options={{ tabBarIcon: ({ focused }) => this.icon({ focused, name: 'book' }) }}  name="Reservas" component={ReserveComponent} />
+                <Tab.Screen options={{ tabBarIcon: ({ focused }) => this.icon({ focused, name: 'person' }) }}  name="Perfil" component={ProfileComponent} />
+            </Tab.Navigator>
         )
     }
 }
