@@ -6,7 +6,7 @@ import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 
 import { signup } from '../store/actions/user';
-import PopupComponent from './PopupComponent';
+import PopupComponent from '../components/PopupComponent';
 import OAuth from '../model/OAuth';
 
 const styles = StyleSheet.create({
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   }
 });
 
-class SignupComponent extends Component {
+class SignupPage extends Component {
 
   state = {
     isVisible: false
@@ -162,4 +162,4 @@ const mapStateToProps = (props) => {
   return props;
 }
 
-export default connect(mapStateToProps, { signup })(SignupComponent);
+export default connect(mapStateToProps, { signup })(SignupPage);

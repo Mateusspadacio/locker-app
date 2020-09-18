@@ -4,7 +4,7 @@ import { Input, Button, Text } from 'react-native-elements';
 import { connect } from 'react-redux';
 
 import { login } from '../store/actions/user';
-import PopupComponent from './PopupComponent';
+import PopupComponent from '../components/PopupComponent';
 import OAuth from '../model/OAuth';
 
 const styles = StyleSheet.create({
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   }
 });
 
-class LoginComponent extends Component {
+class LoginPage extends Component {
 
   state = {
     email: '',
@@ -113,4 +113,4 @@ const mapStateToProps = (props) => {
   return props;
 }
 
-export default connect(mapStateToProps, { login })(LoginComponent);
+export default connect(mapStateToProps, { login })(LoginPage);

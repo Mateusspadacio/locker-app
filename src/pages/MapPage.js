@@ -9,16 +9,19 @@ import { fetchNearbyLockers } from '../store/actions/map';
 const latitudeDelta = 0.0922;
 const longitudeDelta = 0.0421;
 
-class MapComponent extends Component {
+class MapPage extends Component {
 
   state = {
     mapLoaded: false
   }
 
+  fetchLockersOnChange({ latitude, longitude }) {
+    this.props.fetchNearbyLockers(longitude, latitude);
+  }
+
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        await this.props.fetchNearbyLockers(position.coords.longitude, position.coords.latitude);
+      (position) => {
         this.setState({ position, mapLoaded: true });
       },
       (error) => alert(error.message),
@@ -58,7 +61,7 @@ class MapComponent extends Component {
     return (
       <MapView
         style={{ flex: 1 }}
-        onRegionChange={(r) => {}/*console.log(r)*/}
+        onRegionChangeComplete={(position) => this.fetchLockersOnChange(position)}
         initialRegion={{
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -86,4 +89,4 @@ const mapStateToProps = (props) => {
   return props;
 }
 
-export default connect(mapStateToProps, { fetchNearbyLockers })(MapComponent);
+export default connect(mapStateToProps, { fetchNearbyLockers })(MapPage);
