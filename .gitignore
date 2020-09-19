@@ -11,6 +11,7 @@ npm-debug.*
 web-build/
 web-report/
 android
+android/local.properties
 ios
 
 # macOS
