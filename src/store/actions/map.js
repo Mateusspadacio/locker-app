@@ -1,5 +1,4 @@
 import axios from 'axios';
-import 'localstorage-polyfill';
 
 import env from '../../env';
 import { FETCH_LOCKERS, FETCH_LOCKERS_ERROR } from './actionTypes';
@@ -18,7 +17,7 @@ export const fetchNearbyLockers = (long, lat) => {
             });
         } catch(err) {
             const { data } = err.response;
-            console.log(data)
+
             return dispatch({
                 type: FETCH_LOCKERS_ERROR,
                 payload: data.message

@@ -25,7 +25,7 @@ function Routes() {
                 <Stack.Screen
                     name="Signup"
                     component={SignupPage}
-                    options={{ title: 'Cadastro' }}
+                    options={{ headerShown: false }}
                 />
             </Stack.Navigator>
         </NavigationContainer>
