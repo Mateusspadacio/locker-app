@@ -82,6 +82,10 @@ class MapPage extends Component {
     return this.renderRegion ? { latitudeDelta, longitudeDelta, ...this.state.position } : {};
   }
 
+  onMarkerPress(id) {
+    this.props.navigation.navigate('Lockers', { id });
+  }
+
   onRenderAddressItemPress(geometry) {
     this.renderRegion = true;
     this.props.cleanFetchAddress();
@@ -94,7 +98,11 @@ class MapPage extends Component {
   }
 
   fetchAddresses(searchBarText) {
-    if (!searchBarText) return;
+    if (!searchBarText) {
+      this.props.cleanFetchAddress();
+      this.setState({ searchBarText: '', searchBarLoading: false });
+      return;
+    }
 
     if (this.timeout) {
       clearTimeout(this.timeout);
@@ -152,6 +160,7 @@ class MapPage extends Component {
           latitudeDelta,
           longitudeDelta
         }}
+        onPress={() => this.onMarkerPress(_id)}
       >
         <Icon size={30} name='lock' />
       </MapView.Marker>
