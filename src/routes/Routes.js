@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomePage from '../pages/HomePage';
 import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage';
+import LockersPage from '../pages/LockersPage';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,11 @@ function Routes() {
                     name="Signup"
                     component={SignupPage}
                     options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="Lockers"
+                    component={LockersPage}
+                    options={{ title: 'Seleção de armário' }}
                 />
             </Stack.Navigator>
         </NavigationContainer>
